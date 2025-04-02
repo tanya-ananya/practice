@@ -1,49 +1,55 @@
-class Node:
-   def __init__(self, key):
-       self.left = None
-       self.right = None
-       self.val = key
-class BST:
-   def __init__(self):
-       self.root = None
-   def insert(self, key):
-       new_node = Node(key)
-      
-       if self.root is None:
-           self.root = new_node
-           return
-      
-       current = self.root
-       parent = None
+def minHeapify(arr, n, i):
+    smallest = i
+    left = 2 * i + 1
+    right = 2 * i + 2
 
+    if left < n and arr[left] < arr[smallest]:
+        smallest = left
+    if right < n and arr[right] < arr[smallest]:
+        smallest = right
 
-       while current is not None:
-           parent = current
-           if key < current.val:
-               current = current.left
-           else:
-               current = current.right
+    if smallest != i:
+        arr[i], arr[smallest] = arr[smallest], arr[i]
+        minHeapify(arr, n, smallest)
 
+def maxHeapify(arr, n, i):
+    largest = i
+    left = 2 * i + 1
+    right = 2 * i + 2
 
-       if key < parent.val:
-           parent.left = new_node
-       else:
-           parent.right = new_node
-   def inorder(self, node):
-       if node:
-           self.inorder(node.left)
-           print(node.val, end=" ")
-           self.inorder(node.right)
-if __name__ == "__main__":
-   bst = BST()
+    if left < n and arr[left] > arr[largest]:
+        largest = left
+    if right < n and arr[right] > arr[largest]:
+        largest = right
 
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]
+        maxHeapify(arr, n, largest)
 
-   elements = [50, 30, 20, 40, 70, 60, 80]
-   for elem in elements:
-       bst.insert(elem)
-  
-   print("in-order traversal")
-   bst.inorder(bst.root)
-   print()
+def minSort(arr):
+    n = len(arr)
 
+    if n <= 1:
+        return arr
 
+    for x in range(n//2 - 1, -1, -1):
+        minHeapify(arr, n, x)
+
+    for x in range(n - 1, 0, -1):
+        arr[x], arr[0] = arr[0], arr[x]
+        minHeapify(arr, x, 0)
+    return arr
+
+def maxSort(arr):
+    n = len(arr)
+
+    if n <= 1:
+        return arr
+
+    for x in range(n//2 - 1, -1, -1):
+        maxHeapify(arr, n, x)
+
+    for x in range(n - 1, 0, -1):
+        arr[x], arr[0] = arr[0], arr[x]
+        maxHeapify(arr, x, 0)
+    return arr
